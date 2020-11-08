@@ -11,10 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bakingapp.R;
+import com.example.bakingapp.databinding.FragmentStepListBinding;
 
 public class StepListFragment extends Fragment {
     // We create an interface in order to communicate with the containing activity
     OnStepClickListener mCallback;
+
+    private FragmentStepListBinding binding;
 
     public interface OnStepClickListener {
         void onRecipeClicked(int index);
@@ -40,7 +43,9 @@ public class StepListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.fragment_step_list, container, false);
+
+        binding = FragmentStepListBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
 
         // TODO get reference to the view in the layout
 

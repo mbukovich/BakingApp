@@ -11,10 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bakingapp.R;
+import com.example.bakingapp.databinding.FragmentRecipeListBinding;
 
 public class RecipeListFragment extends Fragment {
     // We create an interface in order to communicate with the containing activity
     OnRecipeClickListener mCallback;
+    private FragmentRecipeListBinding binding;
 
     public interface OnRecipeClickListener {
         void onRecipeClicked(int index);
@@ -41,7 +43,9 @@ public class RecipeListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // return super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+        binding = FragmentRecipeListBinding.inflate(inflater, container, false);
+
+        View rootView = binding.getRoot();
 
         // TODO add reference to view inside fragment
 

@@ -3,17 +3,23 @@ package com.example.bakingapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 
+import com.example.bakingapp.databinding.ActivityRecipeBinding;
 import com.example.bakingapp.ui.StepListFragment;
 
 public class RecipeActivity extends AppCompatActivity implements StepListFragment.OnStepClickListener {
 
-    Boolean isPhone;
+    private Boolean isPhone;
+    private ActivityRecipeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe);
+        // set up view binding
+        binding = ActivityRecipeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         isPhone = true; // TODO figure out if the device is a phone or tablet
 
