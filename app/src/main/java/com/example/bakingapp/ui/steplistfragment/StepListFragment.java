@@ -1,4 +1,4 @@
-package com.example.bakingapp.ui;
+package com.example.bakingapp.ui.steplistfragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,18 +9,34 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.bakingapp.R;
+import com.example.bakingapp.Recipe;
 import com.example.bakingapp.databinding.FragmentStepListBinding;
+import com.example.bakingapp.ui.MasterDetailSharedViewModel;
 
-public class StepListFragment extends Fragment {
-    // We create an interface in order to communicate with the containing activity
-    OnStepClickListener mCallback;
+public class StepListFragment extends Fragment implements StepListAdapter.OnStepItemClicked {
+
+    StepListAdapter stepListAdapter;
+
+    private MasterDetailSharedViewModel model;
 
     private FragmentStepListBinding binding;
 
+    // We create an interface in order to communicate with the containing activity
+    OnStepClickListener mCallback;
+
+    @Override
+    public void onClicked(int index) {
+        model.chooseCurrentStep(index);
+        mCallback.onStepClicked();
+    }
+
     public interface OnStepClickListener {
-        void onRecipeClicked(int index);
+        void onStepClicked();
     }
 
     // Now we override onAttach to make sure the host activity has implemented OnRecipeClickListener
@@ -47,12 +63,23 @@ public class StepListFragment extends Fragment {
         binding = FragmentStepListBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
 
-        // TODO get reference to the view in the layout
+        stepListAdapter = new StepListAdapter(this);
+        binding.recyclerViewStepList.setAdapter(stepListAdapter);
+        binding.recyclerViewStepList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.recyclerViewStepList.setHasFixedSize(true);
 
-        // TODO create ui for displaying ingredients and recipe steps
-
-        // TODO create click listener and use it to fire OnStepClickListener
+        model = new ViewModelProvider(requireActivity()).get(MasterDetailSharedViewModel.class);
 
         return rootView;
+    }
+
+    public void chooseRecipeIndex(int index) {
+        model.getCurrentRecipe().observe(getViewLifecycleOwner(), new Observer<Recipe>() {
+            @Override
+            public void onChanged(Recipe recipe) {
+                stepListAdapter.setData(recipe);
+            }
+        });
+        model.chooseCurrentRecipe(index);
     }
 }
