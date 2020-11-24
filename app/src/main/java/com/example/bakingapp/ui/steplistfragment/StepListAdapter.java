@@ -61,6 +61,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepHo
         public StepHolder(RecipeStepItemBinding b) {
             super(b.getRoot());
             binding = b;
+            b.getRoot().setOnClickListener(this);
         }
 
         @Override

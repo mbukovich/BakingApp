@@ -18,6 +18,8 @@ import com.example.bakingapp.Recipe;
 import com.example.bakingapp.databinding.FragmentStepListBinding;
 import com.example.bakingapp.ui.MasterDetailSharedViewModel;
 
+import timber.log.Timber;
+
 public class StepListFragment extends Fragment implements StepListAdapter.OnStepItemClicked {
 
     StepListAdapter stepListAdapter;
@@ -74,12 +76,13 @@ public class StepListFragment extends Fragment implements StepListAdapter.OnStep
     }
 
     public void chooseRecipeIndex(int index) {
+        Timber.d("Choosing Recipe in fragment at index: %s", index);
+        model.chooseCurrentRecipe(index);
         model.getCurrentRecipe().observe(getViewLifecycleOwner(), new Observer<Recipe>() {
             @Override
             public void onChanged(Recipe recipe) {
                 stepListAdapter.setData(recipe);
             }
         });
-        model.chooseCurrentRecipe(index);
     }
 }

@@ -31,6 +31,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
 
     @Override
     public void onClick(int index) {
+        Timber.d("click event passed to fragment. Index: %s", index);
         mCallback.onRecipeClicked(index);
     }
 

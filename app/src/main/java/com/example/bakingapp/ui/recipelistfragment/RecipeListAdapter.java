@@ -30,8 +30,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     public void setData(List<Recipe> data) {
         Timber.d("Setting data for the Recipe List Recycler View");
-        if (data != null)
-            System.out.println("The list of recipes is: " + data.toString());
         recipes = data;
         notifyDataSetChanged();
     }
@@ -47,6 +45,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Timber.d("Binding data to viewHolder: %s", position);
+        Timber.d("The name of this recipe is: %s", recipes.get(position).getName());
         holder.binding.textViewRecipeName.setText(recipes.get(position).getName());
     }
 
@@ -66,10 +65,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public RecipeViewHolder(RecipeLayoutItemBinding b) {
             super(b.getRoot());
             binding = b;
+            b.getRoot().setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            Timber.d("Click Event in Adapter. Adapter position: %s", getAdapterPosition());
             onRecipeClickedListener.onClick(getAdapterPosition());
         }
     }
