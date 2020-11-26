@@ -91,4 +91,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
             }
         });
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

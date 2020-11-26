@@ -33,9 +33,8 @@ public class StepDetailFragment extends Fragment {
         //return super.onCreateView(inflater, container, savedInstanceState);
 
         binding = FragmentStepDetailsBinding.inflate(inflater, container, false);
-        View rootView = binding.getRoot();
 
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -46,17 +45,8 @@ public class StepDetailFragment extends Fragment {
         model.getCurrentStep().observe(getViewLifecycleOwner(), new Observer<Recipe.Step>() {
             @Override
             public void onChanged(Recipe.Step step) {
-                // TODO update UI
                 if (step == null) {
-                    List<Recipe.Ingredient> ingredients = model.getCurrentRecipe().getValue().getIngredients();
-                    int ingredientNum = ingredients.size();
-                    String ingredientText = "";
-                    for (int i = 0; i < ingredientNum; i++) {
-                        ingredientText += ("Ingredient: " + ingredients.get(i).getIngredient() + "\n");
-                        ingredientText += ("Amount: " + ingredients.get(i).getQuantity() + " "
-                                + ingredients.get(i).getMeasure() + "\n" + "\n");
-                    }
-                    binding.textViewDetailDescription.setText(ingredientText);
+                    binding.textViewDetailDescription.setText(model.retrieveIngredients());
                     binding.buttonPreviousStep.setVisibility(View.INVISIBLE);
                 }
                 else {
@@ -69,13 +59,23 @@ public class StepDetailFragment extends Fragment {
                 }
             }
         });
+
+        // set onClickListeners on the navigation buttons
+        binding.buttonNextStep.setOnClickListener(v -> onNextClicked());
+        binding.buttonPreviousStep.setOnClickListener(v -> onPreviousClicked());
     }
 
-    public void onPreviousClicked(View view) {
+    public void onPreviousClicked() {
         model.previousStep();
     }
 
-    public void onNextClicked(View view) {
+    public void onNextClicked() {
         model.nextStep();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

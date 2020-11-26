@@ -21,6 +21,9 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
     private Boolean isPhone;
     private Boolean isMasterFront;
     private ActivityRecipeBinding binding;
+    private int recipeIndex;
+    private StepListFragment stepListFragment;
+    private StepDetailFragment stepDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,8 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         isPhone = true; // TODO figure out if the device is a phone or tablet
 
         // Set up the fragments
-        StepListFragment stepListFragment = new StepListFragment();
-        StepDetailFragment stepDetailFragment = new StepDetailFragment();
+        stepListFragment = new StepListFragment();
+        stepDetailFragment = new StepDetailFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -51,7 +54,7 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
             // we do this within this if-else statement because this should only be done the first time the activity is created.
             Intent intent = getIntent();
             if (intent.hasExtra("index")) {
-                stepListFragment.chooseRecipeIndex(intent.getIntExtra("index", 0));
+                recipeIndex = intent.getIntExtra("index", 0);
             }
             else {
                 // TODO handle error situation
@@ -63,11 +66,15 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // TODO add in code for handling back pressed event
                 if (isPhone) {
                     // we only give a back pressed event special treatment on a phone
                     if (!isMasterFront) {
                         displayMasterList();
+                    }
+                    else {
+                        // we defer to the normal back pressed event if we are currently looking at the master list
+                        setEnabled(false);
+                        onBackPressed();
                     }
                 }
                 else {
@@ -87,6 +94,14 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         else {
             // TODO set up the activity for a tablet screen
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // We need to assign the index to our fragment in onStart so that all necessary objects in the fragment
+        // will have had a chance to be initialized
+        stepListFragment.chooseRecipeIndex(recipeIndex);
     }
 
     @Override

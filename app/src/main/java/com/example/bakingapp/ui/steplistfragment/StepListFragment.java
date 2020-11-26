@@ -85,4 +85,10 @@ public class StepListFragment extends Fragment implements StepListAdapter.OnStep
             }
         });
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

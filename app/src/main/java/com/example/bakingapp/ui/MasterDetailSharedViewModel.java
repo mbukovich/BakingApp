@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.bakingapp.Recipe;
 import com.example.bakingapp.managers.ContentManager;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 public class MasterDetailSharedViewModel extends ViewModel {
@@ -49,6 +51,18 @@ public class MasterDetailSharedViewModel extends ViewModel {
         if (stepIndex == currentRecipe.getValue().getSteps().size())
             return true;
         return false;
+    }
+
+    public String retrieveIngredients() {
+        List<Recipe.Ingredient> ingredients = currentRecipe.getValue().getIngredients();
+        int ingredientNum = ingredients.size();
+        String ingredientText = "";
+        for (int i = 0; i < ingredientNum; i++) {
+            ingredientText += ("Ingredient: " + ingredients.get(i).getIngredient() + "\n");
+            ingredientText += ("Amount: " + ingredients.get(i).getQuantity() + " "
+                    + ingredients.get(i).getMeasure() + "\n" + "\n");
+        }
+        return ingredientText;
     }
 
     public MutableLiveData<Recipe> getCurrentRecipe() {
