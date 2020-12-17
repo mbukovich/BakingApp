@@ -49,6 +49,8 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepHo
 
     @Override
     public int getItemCount() {
+        if (recipe == null)
+            return 0;
         if (recipe.getSteps().isEmpty() || recipe.getSteps() == null)
             return 1;
         return recipe.getSteps().size() + 1;

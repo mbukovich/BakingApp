@@ -53,6 +53,7 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
             // we check if there is information from the MainActivity, and if so we assign the recipe index selected
             // we do this within this if-else statement because this should only be done the first time the activity is created.
             Intent intent = getIntent();
+            isMasterFront = true;
             if (intent.hasExtra("index")) {
                 recipeIndex = intent.getIntExtra("index", 0);
             }
@@ -89,7 +90,10 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         // This activity will be set up differently for a phone and for a tablet
         if (isPhone) {
             // TODO set up the activity for a phone screen
-            displayMasterList();
+            if (isMasterFront)
+                displayMasterList();
+            else
+                displayDetails();
         }
         else {
             // TODO set up the activity for a tablet screen
@@ -116,6 +120,8 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         binding.masterListContainer.setVisibility(View.VISIBLE);
         binding.stepDetailContainer.setVisibility(View.INVISIBLE);
         isMasterFront = true;
+        // just in case there is a video playing, we pause it when returning to the master list
+        stepDetailFragment.pauseVideo();
     }
 
     void displayDetails() {
