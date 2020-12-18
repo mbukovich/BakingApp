@@ -62,8 +62,6 @@ public class StepDetailFragment extends Fragment {
                     // this is the ingredients case
                     binding.textViewDetailDescription.setText(model.retrieveIngredients());
                     binding.buttonPreviousStep.setVisibility(View.INVISIBLE);
-                    binding.detailsLandscapeView.setVisibility(View.INVISIBLE);
-                    binding.detailsPortraitView.setVisibility(View.VISIBLE);
                     binding.playerStepVideo.setVisibility(View.GONE);
                 }
                 else {
@@ -86,25 +84,16 @@ public class StepDetailFragment extends Fragment {
                                     Configuration.ORIENTATION_LANDSCAPE;
                             if (isLandscape) {
                                 // set up video for Landscape Mode
-                                // binding.detailsPortraitView.setVisibility(View.INVISIBLE);
-                                // binding.detailsLandscapeView.setVisibility(View.VISIBLE);
-                                // binding.landscapeVideoPlayer.setVisibility(View.VISIBLE);
-                                binding.detailsLandscapeView.setVisibility(View.INVISIBLE);
-                                binding.detailsPortraitView.setVisibility(View.VISIBLE);
-                                binding.playerStepVideo.setVisibility(View.VISIBLE);
-
+                                // Make the background for landscape mode black
                                 binding.buttonBar.setVisibility(View.GONE);
                                 binding.detailsScrollView.setVisibility(View.GONE);
                             }
                             else {
                                 // Set up video in portrait mode
-                                binding.detailsLandscapeView.setVisibility(View.INVISIBLE);
-                                binding.detailsPortraitView.setVisibility(View.VISIBLE);
-                                binding.playerStepVideo.setVisibility(View.VISIBLE);
-
                                 binding.buttonBar.setVisibility(View.VISIBLE);
                                 binding.detailsScrollView.setVisibility(View.VISIBLE);
                             }
+                            binding.playerStepVideo.setVisibility(View.VISIBLE);
                             binding.playerStepVideo.setPlayer(player);
                             MediaItem mediaItem = MediaItem.fromUri(Uri.parse(step.getVideoURL()));
                             if (player.getCurrentMediaItem() != mediaItem)
@@ -114,8 +103,6 @@ public class StepDetailFragment extends Fragment {
                         }
                         else {
                             // set up video player for a tablet
-                            binding.detailsLandscapeView.setVisibility(View.INVISIBLE);
-                            binding.detailsPortraitView.setVisibility(View.VISIBLE);
                             binding.playerStepVideo.setVisibility(View.VISIBLE);
                             binding.playerStepVideo.setPlayer(player);
                             MediaItem mediaItem = MediaItem.fromUri(Uri.parse(step.getVideoURL()));
