@@ -115,8 +115,9 @@ public class StepDetailFragment extends Fragment {
                     else {
                         // TODO Hide the Video Player and empty it and make sure we are not in full screen video mode
                         binding.playerStepVideo.setVisibility(View.GONE);
-                        binding.detailsLandscapeView.setVisibility(View.INVISIBLE);
-                        binding.detailsPortraitView.setVisibility(View.VISIBLE);
+                        binding.buttonBar.setVisibility(View.VISIBLE);
+                        binding.detailsScrollView.setVisibility(View.VISIBLE);
+
                     }
                 }
             }
