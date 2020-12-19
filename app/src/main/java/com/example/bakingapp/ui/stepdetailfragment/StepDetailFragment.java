@@ -140,6 +140,7 @@ public class StepDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        player.release();
     }
 
     public void pauseVideo() {
