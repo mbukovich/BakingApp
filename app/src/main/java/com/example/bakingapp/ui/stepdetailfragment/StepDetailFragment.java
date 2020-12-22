@@ -117,6 +117,7 @@ public class StepDetailFragment extends Fragment {
                         binding.playerStepVideo.setVisibility(View.GONE);
                         binding.buttonBar.setVisibility(View.VISIBLE);
                         binding.detailsScrollView.setVisibility(View.VISIBLE);
+                        player.release();
 
                     }
                 }

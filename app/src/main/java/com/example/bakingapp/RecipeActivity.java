@@ -41,8 +41,8 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().add(R.id.master_list_container, stepListFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.step_detail_container, stepDetailFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.master_list_container, stepListFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.step_detail_container, stepDetailFragment).commit();
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(IS_MASTER_FRONT_KEY)) {
