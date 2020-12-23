@@ -63,6 +63,7 @@ public class StepDetailFragment extends Fragment {
                     binding.textViewDetailDescription.setText(model.retrieveIngredients());
                     binding.buttonPreviousStep.setVisibility(View.INVISIBLE);
                     binding.playerStepVideo.setVisibility(View.GONE);
+                    pauseVideo();
                 }
                 else {
                     // this case handles an actual ingredient step
@@ -117,8 +118,7 @@ public class StepDetailFragment extends Fragment {
                         binding.playerStepVideo.setVisibility(View.GONE);
                         binding.buttonBar.setVisibility(View.VISIBLE);
                         binding.detailsScrollView.setVisibility(View.VISIBLE);
-                        player.release();
-
+                        pauseVideo();
                     }
                 }
             }
