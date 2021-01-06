@@ -28,6 +28,10 @@ public class StepListFragment extends Fragment implements StepListAdapter.OnStep
 
     private FragmentStepListBinding binding;
 
+    private boolean isRecipeSet;
+
+    private static final String KEY_IS_RECIPE_SET = "isRecipeSet";
+
     // We create an interface in order to communicate with the containing activity
     OnStepClickListener mCallback;
 
@@ -72,23 +76,52 @@ public class StepListFragment extends Fragment implements StepListAdapter.OnStep
 
         model = new ViewModelProvider(requireActivity()).get(MasterDetailSharedViewModel.class);
 
+        if (savedInstanceState != null) {
+            // if this is not the first time to create this view
+            isRecipeSet = savedInstanceState.getBoolean(KEY_IS_RECIPE_SET, true);
+        }
+        else {
+            // this is the first time for the view to be set up, so we set isRecipeSet to false
+            isRecipeSet = false;
+        }
+
         return rootView;
     }
 
     public void chooseRecipeIndex(int index) {
-        Timber.d("Choosing Recipe in fragment at index: %s", index);
-        model.chooseCurrentRecipe(index);
-        model.getCurrentRecipe().observe(getViewLifecycleOwner(), new Observer<Recipe>() {
-            @Override
-            public void onChanged(Recipe recipe) {
-                stepListAdapter.setData(recipe);
+        // if the recipe hasn't been set yet, we set it up
+        if (index == -1) {
+            // error case
+            binding.recyclerViewStepList.setVisibility(View.INVISIBLE);
+            binding.tbErrorMessage.setVisibility(View.VISIBLE);
+        }
+        else {
+            // happy case
+            binding.recyclerViewStepList.setVisibility(View.VISIBLE);
+            binding.tbErrorMessage.setVisibility(View.INVISIBLE);
+            if (!isRecipeSet) {
+                Timber.d("Choosing Recipe in fragment at index: %s", index);
+                model.chooseCurrentRecipe(index);
+                model.getCurrentRecipe().observe(getViewLifecycleOwner(), new Observer<Recipe>() {
+                    @Override
+                    public void onChanged(Recipe recipe) {
+                        stepListAdapter.setData(recipe);
+                    }
+                });
+                isRecipeSet = true;
             }
-        });
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_RECIPE_SET, isRecipeSet);
     }
 }

@@ -31,7 +31,13 @@ public class StepDetailFragment extends Fragment {
 
     private SimpleExoPlayer player;
 
-    private Boolean isPhone = true; // default value
+    private boolean isPhone = true; // default value
+
+    private boolean isReload;
+
+    // Keys for saving state during lifecycle transitions
+    private static final String PLAYER_POSITION_KEY = "playerPosition";
+    private static final String PLAY_WHEN_READY_KEY = "playWhenReady";
 
     // Necessary constructor
     public StepDetailFragment() {
@@ -53,6 +59,8 @@ public class StepDetailFragment extends Fragment {
 
         player = new SimpleExoPlayer.Builder(getContext()).build();
 
+        isReload = savedInstanceState != null;
+
         model = new ViewModelProvider(requireActivity()).get(MasterDetailSharedViewModel.class);
         model.getCurrentStep().observe(getViewLifecycleOwner(), new Observer<Recipe.Step>() {
             @Override
@@ -63,6 +71,7 @@ public class StepDetailFragment extends Fragment {
                     binding.textViewDetailDescription.setText(model.retrieveIngredients());
                     binding.buttonPreviousStep.setVisibility(View.INVISIBLE);
                     binding.playerStepVideo.setVisibility(View.GONE);
+                    binding.stepDetailView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                     pauseVideo();
                 }
                 else {
@@ -88,11 +97,27 @@ public class StepDetailFragment extends Fragment {
                                 // Make the background for landscape mode black
                                 binding.buttonBar.setVisibility(View.GONE);
                                 binding.detailsScrollView.setVisibility(View.GONE);
+                                binding.stepDetailView.setBackgroundColor(getResources().getColor(R.color.black));
+                                if (isReload) {
+                                    // getting video to original position during rotation change
+                                    if(savedInstanceState.containsKey(PLAYER_POSITION_KEY))
+                                        player.seekTo(savedInstanceState.getLong(PLAYER_POSITION_KEY));
+                                    player.setPlayWhenReady(savedInstanceState.getBoolean(PLAY_WHEN_READY_KEY));
+                                    isReload = false; // this should only be true once
+                                }
                             }
                             else {
                                 // Set up video in portrait mode
                                 binding.buttonBar.setVisibility(View.VISIBLE);
                                 binding.detailsScrollView.setVisibility(View.VISIBLE);
+                                binding.stepDetailView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
+                                if (isReload) {
+                                    // getting video to original position during rotation change
+                                    if(savedInstanceState.containsKey(PLAYER_POSITION_KEY))
+                                        player.seekTo(savedInstanceState.getLong(PLAYER_POSITION_KEY));
+                                    player.setPlayWhenReady(savedInstanceState.getBoolean(PLAY_WHEN_READY_KEY));
+                                    isReload = false; // this should only be true once
+                                }
                             }
                             binding.playerStepVideo.setVisibility(View.VISIBLE);
                             binding.playerStepVideo.setPlayer(player);
@@ -106,18 +131,27 @@ public class StepDetailFragment extends Fragment {
                             // set up video player for a tablet
                             binding.playerStepVideo.setVisibility(View.VISIBLE);
                             binding.playerStepVideo.setPlayer(player);
+                            binding.stepDetailView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                             MediaItem mediaItem = MediaItem.fromUri(Uri.parse(step.getVideoURL()));
                             if (player.getCurrentMediaItem() != mediaItem)
                                 player.setMediaItem(mediaItem);
                             player.prepare();
                             player.play();
+                            if (isReload) {
+                                // getting video to original position during rotation change
+                                if(savedInstanceState.containsKey(PLAYER_POSITION_KEY))
+                                    player.seekTo(savedInstanceState.getLong(PLAYER_POSITION_KEY));
+                                player.setPlayWhenReady(savedInstanceState.getBoolean(PLAY_WHEN_READY_KEY));
+                                isReload = false; // this should only be true once
+                            }
                         }
                     }
                     else {
-                        // TODO Hide the Video Player and empty it and make sure we are not in full screen video mode
+                        // No video URL case
                         binding.playerStepVideo.setVisibility(View.GONE);
                         binding.buttonBar.setVisibility(View.VISIBLE);
                         binding.detailsScrollView.setVisibility(View.VISIBLE);
+                        binding.stepDetailView.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                         pauseVideo();
                     }
                 }
@@ -151,5 +185,12 @@ public class StepDetailFragment extends Fragment {
 
     public void setPhone(Boolean phone) {
         isPhone = phone;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(PLAYER_POSITION_KEY, player.getContentPosition());
+        outState.putBoolean(PLAY_WHEN_READY_KEY, player.getPlayWhenReady());
     }
 }

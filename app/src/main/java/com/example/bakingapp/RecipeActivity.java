@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.example.bakingapp.databinding.ActivityRecipeBinding;
@@ -18,6 +19,8 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
 
     private static final String IS_PHONE_KEY = "isphone";
     private static final String IS_MASTER_FRONT_KEY = "ismasterfront";
+    private static final String RECIPE_INDEX_KEY = "recipeIndex";
+
     private Boolean isPhone;
     private Boolean isMasterFront;
     private ActivityRecipeBinding binding;
@@ -33,7 +36,10 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
         View view = binding.getRoot();
         setContentView(view);
 
-        isPhone = true; // TODO figure out if the device is a phone or tablet
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        float width = displayMetrics.widthPixels / displayMetrics.density;
+
+        isPhone = width <= 600.0; // figure out if the device is a phone or tablet
 
         // Set up the fragments
         stepListFragment = new StepListFragment();
@@ -48,6 +54,9 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
             if (savedInstanceState.containsKey(IS_MASTER_FRONT_KEY)) {
                 isMasterFront = savedInstanceState.getBoolean(IS_MASTER_FRONT_KEY);
             }
+            if (savedInstanceState.containsKey(RECIPE_INDEX_KEY)) {
+                recipeIndex = savedInstanceState.getInt(RECIPE_INDEX_KEY);
+            }
         }
         else {
             // we check if there is information from the MainActivity, and if so we assign the recipe index selected
@@ -55,10 +64,11 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
             Intent intent = getIntent();
             isMasterFront = true;
             if (intent.hasExtra("index")) {
-                recipeIndex = intent.getIntExtra("index", 0);
+                recipeIndex = intent.getIntExtra("index", -1);
             }
             else {
-                // TODO handle error situation
+                // handle error situation
+                recipeIndex = -1;
             }
         }
 
@@ -89,14 +99,16 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
 
         // This activity will be set up differently for a phone and for a tablet
         if (isPhone) {
-            // TODO set up the activity for a phone screen
+            // set up the activity for a phone screen
             if (isMasterFront)
                 displayMasterList();
             else
                 displayDetails();
         }
         else {
-            // TODO set up the activity for a tablet screen
+            // set up the activity for a tablet screen
+            binding.masterListContainer.setVisibility(View.VISIBLE);
+            binding.stepDetailContainer.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -134,5 +146,6 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_MASTER_FRONT_KEY, isMasterFront);
+        outState.putInt(RECIPE_INDEX_KEY, recipeIndex);
     }
 }
