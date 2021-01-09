@@ -35,7 +35,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepHo
     public StepHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        return new StepHolder(RecipeStepItemBinding.inflate(inflater));
+        return new StepHolder(RecipeStepItemBinding.inflate(inflater, parent, false));
     }
 
     @Override
