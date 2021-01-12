@@ -38,8 +38,9 @@ public class RecipeActivity extends AppCompatActivity implements StepListFragmen
 
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
         float width = displayMetrics.widthPixels / displayMetrics.density;
+        float height = displayMetrics.heightPixels / displayMetrics.density;
 
-        isPhone = width <= 600.0; // figure out if the device is a phone or tablet
+        isPhone = width <= 600.0 || height <= 600; // figure out if the device is a phone or tablet
 
         // Set up the fragments
         stepListFragment = new StepListFragment();

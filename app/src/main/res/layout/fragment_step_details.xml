@@ -22,7 +22,8 @@
         <TextView
             android:id="@+id/text_view_detail_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/GeneralStyle"/>
     </ScrollView>
 
     <LinearLayout
@@ -37,16 +38,22 @@
             android:id="@+id/button_previous_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Previous"
+            android:text="@string/previous_button"
             android:layout_weight="1"
-            android:background="@drawable/button_previous" />
+            android:background="@drawable/button_previous"
+            style="@style/GeneralStyle"
+            android:textSize="16dp"
+            android:stateListAnimator="@null" />
         <Button
             android:id="@+id/button_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next"
+            android:text="@string/next_button"
             android:layout_weight="1"
-            android:background="@drawable/button_next" />
+            android:background="@drawable/button_next"
+            style="@style/GeneralStyle"
+            android:textSize="16dp"
+            android:stateListAnimator="@null" />
     </LinearLayout>
 
 </LinearLayout>

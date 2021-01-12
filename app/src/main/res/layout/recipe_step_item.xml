@@ -2,12 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="3dp">
+    style="@style/CardStyle" >
 
     <TextView
         android:id="@+id/text_view_recipe_step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"/>
+        style="@style/TitleStyle" />
 
 </androidx.cardview.widget.CardView>

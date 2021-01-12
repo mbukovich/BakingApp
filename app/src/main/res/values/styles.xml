@@ -7,4 +7,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="GeneralStyle">
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TitleStyle" parent="GeneralStyle">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="CardStyle">
+        <item name="android:layout_margin">6dp</item>
+    </style>
+
 </resources>
