@@ -1,6 +1,7 @@
 package com.example.bakingapp.ui.recipelistfragment;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -14,11 +15,13 @@ public class RecipeListViewModel extends ViewModel {
     LiveData<List<Recipe>> recipes;
 
     public LiveData<List<Recipe>> getRecipes() {
-        if (recipes == null) {
-            ContentManager contentManager = ContentManager.getInstance();
-            contentManager.queryRecipeApi();
-            recipes = contentManager.getRecipes();
-        }
+        ContentManager contentManager = ContentManager.getInstance();
+        contentManager.queryRecipeApi();
+        recipes = contentManager.getRecipes();
         return recipes;
+    }
+
+    public void removeObservers(LifecycleOwner owner) {
+        recipes.removeObservers(owner);
     }
 }

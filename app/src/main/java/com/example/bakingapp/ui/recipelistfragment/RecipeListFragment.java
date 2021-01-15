@@ -83,18 +83,47 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
 
         // observe data and update UI
         viewModel = new ViewModelProvider(this).get(RecipeListViewModel.class);
-        viewModel.getRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(List<Recipe> recipes) {
-                Timber.d("Sending data to the recycler view. Number of Recipes: %s", recipes.size());
-                recipeListAdapter.setData(recipes);
-            }
-        });
+        queryRecipes();
+        binding.buttonRetry.setOnClickListener(v -> retryRecipes());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void queryRecipes() {
+        viewModel.getRecipes().observe(getViewLifecycleOwner(), new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                int id = recipes.get(0).getId();
+                if (id >= 0) {
+                    // happy case
+                    // send data to the recycler view
+                    Timber.d("Sending data to the recycler view. Number of Recipes: %s", recipes.size());
+                    binding.recipeListProgressBar.setVisibility(View.INVISIBLE);
+                    recipeListAdapter.setData(recipes);
+                }
+                else {
+                    // sad case
+                    // handle error
+                    Timber.d("Error loading data.");
+                    handleDataError();
+                }
+            }
+        });
+    }
+
+    private void handleDataError() {
+        binding.recipeListProgressBar.setVisibility(View.INVISIBLE);
+        binding.errorBar.setVisibility(View.VISIBLE);
+    }
+
+    private void retryRecipes() {
+        binding.recipeListProgressBar.setVisibility(View.VISIBLE);
+        binding.errorBar.setVisibility(View.INVISIBLE);
+        viewModel.removeObservers(getViewLifecycleOwner());
+        queryRecipes();
     }
 }

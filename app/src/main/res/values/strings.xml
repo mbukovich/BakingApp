@@ -5,4 +5,5 @@
     <string name="step_list_error">There was an error loading the recipe. Please click back and try again.</string>
     <string name="previous_button">Previous</string>
     <string name="next_button">Next</string>
+    <string name="retry_button_text">Retry</string>
 </resources>

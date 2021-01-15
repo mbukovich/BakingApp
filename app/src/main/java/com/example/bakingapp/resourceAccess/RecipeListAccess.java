@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.bakingapp.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,6 +34,11 @@ public class RecipeListAccess {
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 // Sad Case
+                // We create an empty error Recipe so the UI will know to display the appropriate message
+                Recipe errorRecipe = new Recipe(-1,"error",null,null,0,null);
+                List<Recipe> errorList = new ArrayList<>();
+                errorList.add(errorRecipe);
+                results.setValue(errorList);
                 Timber.e(t);
             }
         });
