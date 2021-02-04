@@ -17,17 +17,14 @@
                 android:id="@+id/bt_widget_previous_recipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prev"/>
-            <TextView
-                android:id="@+id/tv_widget_recipe_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:text="Prev"
                 android:layout_weight="1"/>
             <Button
                 android:id="@+id/bt_widget_next_recipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next"/>
+                android:text="Next"
+                android:layout_weight="1"/>
         </LinearLayout>
         <ListView
             android:id="@+id/lv_widget_ingredients"

@@ -18,6 +18,7 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
 
     Context mContext;
     static List<Recipe> mRecipes;
+    static int recipeIndex;
 
     public RecipeRemoteViewsFactory(Context context) {
         mContext = context;
@@ -42,8 +43,7 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     // Returns the number of items necessary for the GridView to display
     @Override
     public int getCount() {
-        // TODO return the correct number of items for the GridView
-        return 0;
+        return mRecipes.get(recipeIndex).getIngredients().size() + 1;
     }
 
     // This very important method is where the data is actually binded to the views.
@@ -51,6 +51,12 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     @Override
     public RemoteViews getViewAt(int position) {
         // TODO bind data to views
+        if (position == 0) {
+            // TODO handle first item case. This will be the recipe Title
+        }
+        else {
+            // TODO handle normal ingredient cases
+        }
         return null;
     }
 
@@ -61,16 +67,31 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        // We don't need any special id for items, so the item position is the same as its id
+        return position;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
+    }
+
+    // The following function will receive an int that represents the recipe index
+    // and converts that number into a usable index from 0 to mRecipes.size()
+    private int processIndex(int i) {
+        int index = i % mRecipes.size();
+        if (index < 0)
+            index += mRecipes.size();
+        return index;
+    }
+
+    // The following function takes an ingredient object and builds a string
+    private String buildIngredientString(Recipe.Ingredient ingredient) {
+        return ingredient.getIngredient() + ": " + ingredient.getQuantity() + " " + ingredient.getMeasure();
     }
 }
