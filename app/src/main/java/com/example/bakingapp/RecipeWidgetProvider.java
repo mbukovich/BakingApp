@@ -8,6 +8,8 @@ import android.widget.RemoteViews;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -27,6 +29,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Create an intent that refers to our "adapter" for the ListView
         Intent listIntent = new Intent(context, ListWidgetService.class);
         listIntent.putExtra(RECIPE_INDEX_KEY, recipeItem);
+        Timber.d("Hooking up the list adapter to the remote gridView");
 
         // Connect our "adapter" with the GridView
         views.setRemoteAdapter(R.id.lv_widget_ingredients, listIntent);

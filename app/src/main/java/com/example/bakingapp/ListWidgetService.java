@@ -5,12 +5,26 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.bakingapp.resourceAccess.ClientApi;
+import com.example.bakingapp.resourceAccess.RecipeApi;
+
+import java.io.IOException;
 import java.util.List;
 
+import retrofit2.Call;
+import timber.log.Timber;
+
 public class ListWidgetService extends RemoteViewsService {
+
+    public static final String RECIPE_INDEX_KEY = "recipeIndexKey";
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new RecipeRemoteViewsFactory(this.getApplicationContext());
+        int index = 0;
+        if (intent.hasExtra(RECIPE_INDEX_KEY)) {
+            index = intent.getIntExtra(RECIPE_INDEX_KEY, 0);
+        }
+        return new RecipeRemoteViewsFactory(this.getApplicationContext(), index);
     }
 }
 
@@ -20,7 +34,8 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     static List<Recipe> mRecipes;
     static int recipeIndex;
 
-    public RecipeRemoteViewsFactory(Context context) {
+    public RecipeRemoteViewsFactory(Context context, int index) {
+        recipeIndex = processIndex(index);
         mContext = context;
     }
 
@@ -32,7 +47,22 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     // this is called on start and when notifyAppWidgetViewDataChanged is called
     @Override
     public void onDataSetChanged() {
-        // TODO get data from network resource
+        Timber.d("Updating recipe data in the widget");
+        if (mRecipes == null) {
+            // Get Data from Network Resource if we have not already
+            try
+            {
+                RecipeApi recipeApi = ClientApi.getClient().create(RecipeApi.class);
+                Call<List<Recipe>> call = recipeApi.getRecipes();
+                mRecipes = call.execute().body();
+                Timber.d("Data was obtained for the widget.");
+            }
+            catch (IOException e)
+            {
+                Timber.d("Error getting data for the widget.");
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -43,6 +73,9 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     // Returns the number of items necessary for the GridView to display
     @Override
     public int getCount() {
+        if (mRecipes == null) {
+            return 1;
+        }
         return mRecipes.get(recipeIndex).getIngredients().size() + 1;
     }
 
@@ -50,14 +83,27 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     // Very similar to onBindViewHolder in a collection Adapter
     @Override
     public RemoteViews getViewAt(int position) {
-        // TODO bind data to views
-        if (position == 0) {
-            // TODO handle first item case. This will be the recipe Title
+        Timber.d("Binding data to item: %s", position);
+        // bind data to views
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredient_item);
+        if (mRecipes != null) {
+            // If we have obtained data for our recipes
+            if (position == 0) {
+                // handle first item case. This will be the recipe Title
+                views.setTextViewText(R.id.tv_ingredient_item, mRecipes.get(recipeIndex).getName());
+            }
+            else {
+                // handle normal ingredient cases
+                String ingredient = buildIngredientString(mRecipes.get(recipeIndex).getIngredients().get(position - 1));
+                views.setTextViewText(R.id.tv_ingredient_item, ingredient);
+            }
         }
         else {
-            // TODO handle normal ingredient cases
+            // otherwise we give an error message
+            views.setTextViewText(R.id.tv_ingredient_item, "Error Loading Data");
         }
-        return null;
+
+        return views;
     }
 
     @Override
