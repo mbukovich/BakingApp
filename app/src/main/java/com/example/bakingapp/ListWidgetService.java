@@ -35,7 +35,7 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
     static int recipeIndex;
 
     public RecipeRemoteViewsFactory(Context context, int index) {
-        recipeIndex = processIndex(index);
+        recipeIndex = index;
         mContext = context;
     }
 
@@ -56,6 +56,7 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
                 Call<List<Recipe>> call = recipeApi.getRecipes();
                 mRecipes = call.execute().body();
                 Timber.d("Data was obtained for the widget.");
+                recipeIndex = processIndex(recipeIndex);
             }
             catch (IOException e)
             {
@@ -90,11 +91,13 @@ class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory 
             // If we have obtained data for our recipes
             if (position == 0) {
                 // handle first item case. This will be the recipe Title
+                Timber.d("Putting the title in: %s", mRecipes.get(recipeIndex).getName());
                 views.setTextViewText(R.id.tv_ingredient_item, mRecipes.get(recipeIndex).getName());
             }
             else {
                 // handle normal ingredient cases
                 String ingredient = buildIngredientString(mRecipes.get(recipeIndex).getIngredients().get(position - 1));
+                Timber.d("Putting in ingredient: %s", ingredient);
                 views.setTextViewText(R.id.tv_ingredient_item, ingredient);
             }
         }
