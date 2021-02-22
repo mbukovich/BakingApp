@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BakingApp</string>
 
+    <string name="video_error">There was an error loading the video. Please try again.</string>
     <string name="recipe_list_error">There was an error loading the recipes.</string>
     <string name="step_list_error">There was an error loading the recipe. Please click back and try again.</string>
     <string name="previous_button">Previous</string>

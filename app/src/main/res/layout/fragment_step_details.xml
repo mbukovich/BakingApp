@@ -8,11 +8,22 @@
     android:id="@+id/step_detail_view"
     android:background="@color/colorBackground">
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/player_step_video"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0" />
+        android:layout_weight="0">
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/player_step_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_video_network_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="@string/video_error"
+            style="@style/TitleStyle" />
+    </FrameLayout>
 
     <ScrollView
         android:id="@+id/details_scroll_view"
